@@ -1,5 +1,6 @@
 import tkinter as tk
 import tensorflow as tf
+import numpy as np
 
 class Simulator:
     def __init__(self, master):
@@ -24,16 +25,9 @@ class Simulator:
 
     def update_grid(self):
         # use the model to update the state of the grid
-        updated_grid = self.model.predict(self.grid)
-        self.grid = updated_grid
-
-        for row in range(10):
-            for col in range(10):
-                if self.grid[row][col] == 0:
-                    color = "white"
-                else:
-                    color = "black"
-                self.canvas.create_rectangle(row*20, col*20, (row+1)*20, (col+1)*20, fill=color)
+        flatten_grid = np.reshape(self.grid, (1, 100))
+        updated_grid = self.model.predict(flatten_grid)
+        self.grid = np.reshape(updated_grid, (10,10))
 
     def run(self):
         self.update_grid()
